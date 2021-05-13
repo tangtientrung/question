@@ -1,0 +1,74 @@
+<?php
+    // $helper = $this->helper('AHT\Question\Helper\Helper');
+    // if($helper->isLoggedIn())
+    // {
+    //     echo "login";
+    // }
+    // else 
+    // {
+    //     echo "not login";
+    // }
+    // var_dump($block->isLoggedIn());
+    // var_dump($block->getUser());
+    
+    foreach($block->getAllData() as $key => $val){
+        if($val->getProductId() == $block->getCurrentProduct()->getId())
+        {
+            // echo "<pre>";
+            // print_r($key->getData());
+            // echo "</pre>";
+            // echo $val->getId();
+            echo $val->getFirstname().' '.$val->getLastname();
+            echo $val->getQuestion();
+            // echo $val->getProductId();
+            // echo $block->getProduct($val->getProductId())->getName();
+            echo "</br>";
+        }
+        
+    }
+    $user = $block->getUser();
+    if($user == null )
+    {
+        echo "Vui lòng đăng nhập để đặt câu hỏi";
+        ?>
+        <form method='post' action="<?php echo $this->getUrl("question/index/save")?>">
+        <input type="hidden" name="url" value="<?= $block->getCurrentUrl();?>"/>
+        <input type="hidden" name="product_id" value="<?= $block->getCurrentProduct()->getId();?>"/>
+        <input type="hidden" name="user_id" value="1"/>
+            <div class="form-group">
+                <label for="name">Câu hỏi</label>
+                <input type="textarea" class="form-control" id="comment" placeholder="Enter a question" name="question"/>
+            </div>
+            <button type="submit" class="btn btn-primary" >Submit</button>
+        </form>
+        <?php
+        
+    }
+    else {
+        // $idProduct = $block->getCurrentProduct()->getId();
+        // $idUser = $user;
+        // echo $idUser;
+       echo "ok";
+       ?>
+        <form method='post' action="<?php echo $this->getUrl("question/index/save")?>">
+            <div class="form-group">
+                <label for="name">Câu hỏi</label>
+                <input type="textarea" class="form-control" id="comment" placeholder="Enter a question" name="question">
+            </div>
+            <button type="submit" class="btn btn-primary" >Submit</button>
+        </form>
+        <?php
+    }
+
+?>
+<?php 
+    // $om = \Magento\Framework\App\ObjectManager::getInstance();
+
+    // $customerSession = $om->get('Magento\Customer\Model\Session');
+    // if($customerSession->isLoggedIn()) {
+    //     echo   $customerSession->getCustomer()->getId();  
+    // }
+    // else {
+    //     echo "not login";
+    // } 
+?>
