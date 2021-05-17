@@ -32,13 +32,26 @@ class Index extends \Magento\Framework\App\Action\Action
 
 	public function execute()
 	{
+		// $question = $this->_questionCollectionFactory->create();
+		// $customer=$this->_customerFactory->create();
+		// $question->getSelect()->join(
+		// 	['table1join'=>$question->getTable('customer_entity')],
+		// 	'main_table.user_id = table1join.entity_id',
+		// 	[])
+		// 	->addFieldToFilter('main_table.status', array('eq' => '1'));
+		// print_r($question->getData());
+		$id=0;
 		$question = $this->_questionCollectionFactory->create();
-		$customer=$this->_customerFactory->create();
 		$question->getSelect()->join(
 			['table1join'=>$question->getTable('customer_entity')],
 			'main_table.user_id = table1join.entity_id',
-			[])
-			->addFieldToFilter('main_table.status', array('eq' => '1'));
-		print_r($question->getData());
+			array('*'))
+			->where("main_table.user_id = 0 AND main_table.question_id = 0 ");
+			// foreach($question as $item){
+			// 	echo "<pre>";
+			// 	print_r($item->getData());
+			// 	echo "</pre>";
+			// }
+		echo $question->getSelect()->__toString();
 	}
 }
