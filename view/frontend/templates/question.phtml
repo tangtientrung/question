@@ -1,3 +1,8 @@
+<style>
+    .list-group-item {
+        list-style: none;
+    }
+</style>
 <div class="container">
     <div class="row">
         <div class="panel panel-default widget">
@@ -11,7 +16,7 @@
             <div class="panel-body">
                 <ul class="list-group">
                 <?php 
-                    foreach($block->getAllData() as $key => $val){
+                    foreach($block->getAllQuestion() as $key => $val){
                         if($val->getProductId() == $block->getCurrentProduct()->getId())
                         {
                         
@@ -32,15 +37,18 @@
                                    <?php echo $val->getContent();?> 
                                 </div>
                                 <div class="action">
-                                    <button type="button" class="btn btn-primary btn-xs" title="Edit">
-                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    <button type="button" class="btn btn-primary btn-xs btn-answer" data-id="<?php echo $val->getId();?>" title="Answer">
+                                        <span class="glyphicon glyphicon-pencil">Answer</span>
                                     </button>
-                                    <button type="button" class="btn btn-success btn-xs" title="Approved">
+                                    <button type="button" class="btn btn-success btn-xs btn-edit" title="Approved">
                                         <span class="glyphicon glyphicon-ok"></span>
                                     </button>
                                     <button type="button" class="btn btn-danger btn-xs" title="Delete">
                                         <span class="glyphicon glyphicon-trash"></span>
                                     </button>
+                                </div>
+                                <div class="form-action">
+                                
                                 </div>
                                 
                             </div>
@@ -61,14 +69,14 @@
     if($block->isLoggedIn() == true )
     {
         ?>
-        <form method='post' action="<?php echo $this->getUrl("question/index/save")?>">
+        <form method='post' class="form-question">
         <input type="hidden" name="url" value="<?= $block->getCurrentUrl();?>"/>
         <input type="hidden" name="product_id" value="<?= $block->getCurrentProduct()->getId();?>"/>
             <div class="form-group">
                 <label for="name">Câu hỏi</label>
                 <input type="textarea" class="form-control" id="comment" placeholder="Enter a question" name="question"/>
             </div>
-            <button type="submit" class="btn btn-primary" >Submit</button>
+            <button type="submit" class="btn btn-primary btn-question" >Submit</button>
         </form>
         <?php
         
@@ -78,4 +86,70 @@
     }
 
 ?>
+<div id="ajaxresponse"></div>
+<script type="text/javascript">
+    require(["jquery"],function($) {
+        $(document).ready(function() {
+            $(".btn-answer").click(function(){
+                var id =parseInt( $(this).data('id'));
+                var url = "<?php echo $this->getUrl().'question/ajax/answer'?>";
+                // alert(url);
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        id: id,
+                    },
+                complete: function(response) {         
+                    // console.log(response);    
+                    // alert(response);
+                    // $('#test').removeClass('hideme');
+                    //             var html = template('#test', {posts:data}); 
+                    //             $('#test').html(html);
+                    $('#ajaxresponse').html(data.output);
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        console.log('Error happens. Try again.');
+                    }
+                });
+                
+                
+            });
+            jQuery(".form-question").submit(function(e){
+                e.preventDefault();
+                var content = jQuery('input[name="question"]').val();
+                var product_id = jQuery('input[name="product_id"]').val();
+                var url = "<?php echo $this->getUrl().'question/ajax/question'?>";
+                // alert(product_id);
+                jQuery.ajax({
+                    url: url,
+                    type: 'POST',
+                    showLoader: true,
+                    cache: false,
+                    data: {
+                        content: content,
+                        product_id: product_id
+                    },
+                    success: function(response) {         
+                        console.log(response);    
+                        alert(response);
+                        alert('ok');
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        alert('Error happens. Try again.');
+                    }
 
+                });
+            });
+            
+        });
+    });
+</script>
+
+<!-- <div id='test' class="hideme">
+    <select>
+    <% _.each(posts, function(text,value) { %>
+        <option value="<%= value %>"><%= text %></option>
+    <% }) %> 
+    </select>
+</div> -->

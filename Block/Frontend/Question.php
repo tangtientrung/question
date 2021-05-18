@@ -61,15 +61,16 @@ class Question extends \Magento\Framework\View\Element\Template
         return $isLoggedIn;
     }
 
-	public function getAllData()
+	public function getAllQuestion()
 	{
-		$product_id=$this->getCurrentProduct()->getId();
+		// $product_id=$this->getCurrentProduct()->getId();
 		$question = $this->_questionCollectionFactory->create();
 		$question->getSelect()->join(
 			['table1join'=>$question->getTable('customer_entity')],
 			'main_table.user_id = table1join.entity_id',
 			array('*'))
-			->where('main_table.status', array('eq' => '1'));
+			->where('main_table.status = 1')
+			->where('main_table.type = 0');
 		return $question;
 	}
 	public function getProduct($id)
