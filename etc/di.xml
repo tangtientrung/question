@@ -21,6 +21,10 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- api -->
+    <preference for="AHT\Question\Api\QuestionRepositoryInterface" type="AHT\Question\Model\QuestionRepository"/>
+    <preference for="AHT\Question\Api\Data\QuestionInterface" type="AHT\Question\Model\Question"/>
 </config>
 
 <!-- <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
