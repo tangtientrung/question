@@ -1,70 +1,3 @@
-<style>
-    .list-group-item {
-        list-style: none;
-    }
-</style>
-<div class="container">
-    <div class="row">
-        <div class="panel panel-default widget">
-            <div class="panel-heading">
-                <span class="glyphicon glyphicon-comment"></span>
-                <h3 class="panel-title">
-                    Recent Comments</h3>
-                <!-- <span class="label label-info">
-                    78</span> -->
-            </div>
-            <div class="panel-body">
-                <ul class="list-group">
-                <?php 
-                    foreach($block->getAllQuestion() as $key => $val){
-                        if($val->getProductId() == $block->getCurrentProduct()->getId())
-                        {
-                        
-                ?>
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-xs-2 col-md-1">
-                                <!-- <img src="http://placehold.it/80" class="img-circle img-responsive" alt="" /></div> -->
-                            <div class="col-xs-10 col-md-11">
-                                <div>
-                                    <a href="http://www.jquery2dotnet.com/2013/10/google-style-login-page-desing-usign.html">
-                                        <?php echo $val->getFirstname().' '.$val->getLastname();?></a>
-                                    <!-- <div class="mic-info">
-                                        By: <a href="#">Bhaumik Patel</a> on 2 Aug 2013
-                                    </div> -->
-                                </div>
-                                <div class="comment-text">
-                                   <?php echo $val->getContent();?> 
-                                </div>
-                                <div class="action">
-                                    <button type="button" class="btn btn-primary btn-xs btn-answer" data-id="<?php echo $val->getId();?>" title="Answer">
-                                        <span class="glyphicon glyphicon-pencil">Answer</span>
-                                    </button>
-                                    <button type="button" class="btn btn-success btn-xs btn-edit" title="Approved">
-                                        <span class="glyphicon glyphicon-ok"></span>
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-xs" title="Delete">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </button>
-                                </div>
-                                <div class="form-action">
-                                
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </li>
-                <?php
-                        }
-                        
-                    }
-                ?>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
 <?php
     if($block->isLoggedIn() == true )
     {
@@ -86,41 +19,41 @@
     }
 
 ?>
-<div id="ajaxresponse"></div>
+<style>
+    .list-group-item {
+        list-style: none;
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="panel panel-default widget">
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-comment"></span>
+                <h3 class="panel-title">
+                    Recent Questions</h3>
+                <!-- <span class="label label-info">
+                    78</span> -->
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+               
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script type="text/javascript">
     require(["jquery"],function($) {
         $(document).ready(function() {
-            $(".btn-answer").click(function(){
-                var id =parseInt( $(this).data('id'));
-                var url = "<?php echo $this->getUrl().'question/ajax/answer'?>";
-                // alert(url);
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: {
-                        id: id,
-                    },
-                complete: function(response) {         
-                    // console.log(response);    
-                    // alert(response);
-                    // $('#test').removeClass('hideme');
-                    //             var html = template('#test', {posts:data}); 
-                    //             $('#test').html(html);
-                    $('#ajaxresponse').html(data.output);
-                    },
-                    error: function (xhr, status, errorThrown) {
-                        console.log('Error happens. Try again.');
-                    }
-                });
-                
-                
-            });
+            loadQuestion();
+            
             jQuery(".form-question").submit(function(e){
                 e.preventDefault();
                 var content = jQuery('input[name="question"]').val();
                 var product_id = jQuery('input[name="product_id"]').val();
                 var url = "<?php echo $this->getUrl().'question/ajax/question'?>";
-                // alert(product_id);
                 jQuery.ajax({
                     url: url,
                     type: 'POST',
@@ -130,10 +63,9 @@
                         content: content,
                         product_id: product_id
                     },
-                    success: function(response) {         
-                        console.log(response);    
-                        alert(response);
-                        alert('ok');
+                    success: function(data) {  
+                        loadQuestion();       
+                        alert('Đặt câu hỏi thành công!Vui lòng chờ admin xác nhận câu hỏi của bạn');
                     },
                     error: function (xhr, status, errorThrown) {
                         alert('Error happens. Try again.');
@@ -141,15 +73,181 @@
 
                 });
             });
-            
+            function saveEdit(){
+                jQuery(".form-edit").submit(function(e){
+                    e.preventDefault();
+                    var content = jQuery('input[name="question"]').val();
+                    var id = jQuery('input[name="id"]').val();
+                    var url = "<?php echo $this->getUrl().'question/ajax/saveedit'?>";
+                    jQuery.ajax({
+                        url: url,
+                        type: 'POST',
+                        showLoader: true,
+                        cache: false,
+                        data: {
+                            content: content,
+                            id: id
+                        },
+                        success: function(data) {  
+                            loadQuestion();       
+                            alert('Sửa thành công');
+                        },
+                        error: function (xhr, status, errorThrown) {
+                            alert('Error happens. Try again.');
+                        }
+
+                    });
+                });
+            }
+            function edit(){
+                jQuery(".btn-edit").click(function(e){
+                e.preventDefault();
+                var id =parseInt( $(this).data('id'));
+                var className = "comment-text-"+id;
+                var content = $(".comment-text-"+id).text();
+
+                var url = "<?php echo $this->getUrl().'question/ajax/edit'?>";
+                jQuery.ajax({
+                    url: url,
+                    type: 'POST',
+                    showLoader: true,
+                    cache: false,
+                    data: {
+                        id: id,
+                        className: className,
+                        content : content
+                    },
+                    success: function(data) {  
+                        $('.'+className).html(data.output);     
+                        saveEdit();
+                        jQuery(".btn-cancel").click(function(e){
+                            loadQuestion();
+                        });
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        alert('Error happens. Try again.');
+                    }
+
+                    });
+                });
+            }
+            function answer(){
+                jQuery(".btn-answer").click(function(e){
+                e.preventDefault();
+                var id =parseInt( $(this).data('id'));;
+                var product_id = jQuery('input[name="product_id"]').val();
+                var className = "answer-"+id;
+                alert(className);
+                var url = "<?php echo $this->getUrl().'question/ajax/answer'?>";
+                jQuery.ajax({
+                    url: url,
+                    type: 'POST',
+                    showLoader: true,
+                    cache: false,
+                    data: {
+                        id: id,
+                        product_id: product_id
+                    },
+                    success: function(data) {  
+                        $('.'+className).html(data.output);
+                        saveAnswer();
+                        jQuery(".btn-cancel").click(function(e){
+                            loadQuestion();
+                        });
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        alert('Error happens. Try again.');
+                    }
+
+                    });
+                });
+            }
+            function saveAnswer(){
+                jQuery(".form-answer").submit(function(e){
+                    e.preventDefault();
+                    var product_id = jQuery('input[name="product_id"]').val();
+                    var question_id = jQuery('input[name="question_id"]').val();
+                    var content = jQuery('input[name="answer"]').val();
+                    // alert(content);
+                    var url = "<?php echo $this->getUrl().'question/ajax/saveanswer'?>";
+                    jQuery.ajax({
+                        url: url,
+                        type: 'POST',
+                        showLoader: true,
+                        cache: false,
+                        data: {
+                            product_id: product_id,
+                            question_id: question_id,
+                            content: content
+                        },
+                        success: function(data) {  
+                            loadQuestion();       
+                            alert('Thành công');
+                        },
+                        error: function (xhr, status, errorThrown) {
+                            alert('Error happens. Try again.');
+                        }
+
+                    });
+                });
+            }
+            function del(){
+                jQuery(".btn-delete").click(function(e){
+                    if (confirm("Are you sure?")) {
+                        e.preventDefault();
+                    var id =parseInt( $(this).data('id'));
+
+                    var url = "<?php echo $this->getUrl().'question/ajax/delete'?>";
+                    jQuery.ajax({
+                        url: url,
+                        type: 'POST',
+                        showLoader: true,
+                        cache: false,
+                        data: {
+                            id: id
+                        },
+                        success: function(data) {  
+                            alert('Thành công');
+                            loadQuestion();
+                        },
+                        error: function (xhr, status, errorThrown) {
+                            alert('Error happens. Try again.');
+                        }
+
+                        });
+                    }
+                    return false;
+                
+                });
+            }
+            function loadQuestion(){
+
+            	var id = jQuery('input[name="product_id"]').val();
+
+                var url = "<?php echo $this->getUrl().'question/ajax/loadquestion'?>";
+                jQuery.ajax({
+                    url: url,
+                    type: 'POST',
+                    showLoader: true,
+                    cache: false,
+                    data: {
+                        id: id,
+                    },
+                    success: function(data) {         
+                        // $('.list-group').html("<li>Appended item</li>");
+                        $('.list-group').html(data.output);
+                        edit();
+                        answer();
+                        del();
+                        // console.log(data.output);
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        alert('Error happens. Try again.');
+                        console.log('Error happens. Try again.');
+                    }
+
+                });
+            }
         });
     });
 </script>
-
-<!-- <div id='test' class="hideme">
-    <select>
-    <% _.each(posts, function(text,value) { %>
-        <option value="<%= value %>"><%= text %></option>
-    <% }) %> 
-    </select>
-</div> -->

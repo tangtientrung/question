@@ -151,7 +151,7 @@
                     <item name="formElement" xsi:type="string">input</item>
                     <item name="source" xsi:type="string">question</item>
                     <item name="dataScope" xsi:type="string">question</item>
-                    <item name="label" xsi:type="string" translate="true">Answer of others user/item>
+                    <item name="label" xsi:type="string" translate="true">Answer of others user</item>
                     <item name="filter" xsi:type="string">text</item>
                 </item>
             </argument>
