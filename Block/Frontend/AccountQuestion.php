@@ -56,17 +56,41 @@ class AccountQuestion extends \Magento\Framework\View\Element\Template
 		$user_id = $this->getUserId();
 		$question = $this->_questionCollectionFactory->create();
 		$question->getSelect()->joinLeft('catalog_product_entity_varchar as pro','main_table.product_id = pro.entity_id AND pro.attribute_id = 73 ',array('*'))
-			->where('main_table.status = 1')
+		
+			->where('main_table.type = 0')
 			->where('main_table.user_id = '.$user_id);
 		return $question;
 		// var_dump($question);
 		// die();
 		// return $question->getSelect()->__toString();
 	}
-	
+	public function getQuestion()
+	{
+		$id = $this->getRequest()->getParam('id');
+		$question = $this->_questionCollectionFactory->create();
+		$question->getSelect()->joinLeft('catalog_product_entity_varchar as pro','main_table.product_id = pro.entity_id AND pro.attribute_id = 73 ',array('*'))
+			->where('main_table.question_id = '.$id);
+		return $question;
+		// var_dump($question);
+		// die();
+		// return $question->getSelect()->__toString();
+	}
 	public function getUserId()
 	{
 		return $this->_customerSession->getCustomerData()->getId();
 	}
-	
+	public function getQuestionId()
+	{
+		return $this->getRequest()->getParam('id');
+	}
+	public function getAnswer($id)
+	{
+		$question = $this->_questionCollectionFactory->create();
+		$question->getSelect()->joinLeft('catalog_product_entity_varchar as pro','main_table.product_id = pro.entity_id AND pro.attribute_id = 73 ',array('*'))
+			->where('main_table.question_id = '.$id);
+		return $question;
+		// var_dump($question);
+		// die();
+		// return $question->getSelect()->__toString();
+	}
 }

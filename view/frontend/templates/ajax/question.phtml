@@ -126,6 +126,14 @@
                                                     <div class="comment-text-<?php echo $val2->getId(); ?>">
                                                     <?php echo $val2->getContent();?> 
                                                     </div>
+                                                    <div class="action">
+                                                        <a type="button" class="btn btn-success btn-xs btn-edit" title="Edit" data-id="<?php echo $val2->getId();?>">
+                                                            <span class="glyphicon glyphicon-ok">Edit</span>
+                                                        </a>
+                                                        <a type="button" class="btn btn-danger btn-xs btn-delete" title="Delete" data-id="<?php echo $val2->getId();?>">
+                                                            <span class="glyphicon glyphicon-trash">Delete</span>
+                                                        </a>
+                                                    </div>
                                             </div>
                                         </li>
                                         <?php
@@ -170,7 +178,12 @@
                                         <a type="button" class="btn btn-primary btn-xs btn-answer" data-id="<?php echo $val1->getId();?>" title="Answer">
                                             <span class="glyphicon glyphicon-pencil">Answer</span>
                                         </a>
-                                        
+                                        <a type="button" class="btn btn-success btn-xs btn-edit" title="Edit" data-id="<?php echo $val1->getId();?>">
+                                            <span class="glyphicon glyphicon-ok">Edit</span>
+                                        </a>
+                                        <a type="button" class="btn btn-danger btn-xs btn-delete" title="Delete" data-id="<?php echo $val1->getId();?>">
+                                            <span class="glyphicon glyphicon-trash">Delete</span>
+                                        </a>
                                     </div>
                                     <div class="answer-<?php echo $val1->getId(); ?>">
                                     
@@ -229,6 +242,14 @@
                                                     </div>
                                                     <div class="comment-text-<?php echo $val2->getId(); ?>">
                                                     <?php echo $val2->getContent();?> 
+                                                    </div>
+                                                    <div class="action">
+                                                        <a type="button" class="btn btn-success btn-xs btn-edit" title="Edit" data-id="<?php echo $val2->getId();?>">
+                                                            <span class="glyphicon glyphicon-ok">Edit</span>
+                                                        </a>
+                                                        <a type="button" class="btn btn-danger btn-xs btn-delete" title="Delete" data-id="<?php echo $val2->getId();?>">
+                                                            <span class="glyphicon glyphicon-trash">Delete</span>
+                                                        </a>
                                                     </div>
                                             </div>
                                         </li>

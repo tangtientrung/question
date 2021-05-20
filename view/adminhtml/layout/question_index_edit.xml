@@ -6,7 +6,7 @@
     <body>
         <referenceContainer name="content">
         
-            <block class="AHT\Question\Block\Adminhtml\Question" name="adminhtml.product.question" template="AHT_Question::test.phtml"/>
+            <!-- <block class="AHT\Question\Block\Adminhtml\Question" name="adminhtml.product.question" template="AHT_Question::test.phtml"/> -->
            <uiComponent name="question_index_form" />
             <!-- <block class="Magento\Review\Block\Adminhtml\Rating" name="adminhtml.rating.container"/> -->
 

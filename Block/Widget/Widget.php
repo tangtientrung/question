@@ -1,8 +1,8 @@
 <?php
 
-namespace AHT\Question\Block\Frontend;
+namespace AHT\Question\Block\Widget;
 
-class Question extends \Magento\Framework\View\Element\Template
+class Widget extends \Magento\Framework\View\Element\Template implements \Magento\Widget\Block\BlockInterface
 {
 	 /**
      * @var $_questionFactory
@@ -19,8 +19,10 @@ class Question extends \Magento\Framework\View\Element\Template
 	protected $httpContext;
 	protected $_coreSession;
 	protected $_customerSession;
-	
-
+    protected $_productRepositoryFactory;
+	protected $_imageHelper;
+    protected $_productCollection;
+    protected $_productrepository;
 	/**
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \AHT\Question\Model\QuestionFactory $questionFactory
@@ -40,7 +42,11 @@ class Question extends \Magento\Framework\View\Element\Template
 		\Magento\Framework\App\Http\Context $httpContext,
 		\Magento\Framework\Session\SessionManagerInterface $coreSession,
 		\Magento\Customer\Model\Session $customerSession,
-		
+        \Magento\Catalog\Model\ProductFactory $productRepositoryFactory,
+        \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection, 
+        \Magento\Catalog\Helper\Image $imageHelper,
+		\Magento\Catalog\Api\ProductRepositoryInterface $productrepository,
+        
 		array $data = []
 	)
 	{
@@ -52,50 +58,58 @@ class Question extends \Magento\Framework\View\Element\Template
 		$this->httpContext = $httpContext;
 		$this->_coreSession = $coreSession;
 		$this->_customerSession = $customerSession;
+        $this->_productRepositoryFactory = $productRepositoryFactory;
+        $this->_imageHelper = $imageHelper;
+        $this->_productCollection = $productCollection;
+        $this->_productrepository = $productrepository;
 		parent::__construct($context, $data);
 	}
 
-	
-	public function getCurrentProduct()
-    {       
-        return $this->_registry->registry('current_product');
-    }   
 
-	
-
-	public function isLoggedIn()
-    {
-        $isLoggedIn = $this->httpContext->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH);
-        return $isLoggedIn;
-    }
-
-	public function getAllQuestion()
+	public function getAllQuestion($product_id)
 	{
 		// $product_id=$this->getCurrentProduct()->getId();
 		$question = $this->_questionCollectionFactory->create();
+
 		$question->getSelect()->join(
 			['table1join'=>$question->getTable('customer_entity')],
 			'main_table.user_id = table1join.entity_id',
 			array('*'))
+            ->joinLeft('catalog_product_entity_varchar as pro','main_table.product_id = pro.entity_id AND pro.attribute_id = 73 ',array('*'))
 			->where('main_table.status = 1')
-			->where('main_table.type = 0');
+			->where('main_table.type = 0')
+            ->where('main_table.product_id = '.$product_id);
 		return $question;
+        // return $question->getSelect()->__toString();
 	}
-	public function getProduct($id)
-    {
-        return $this->_product->create()->load($id);
-    }
-	public function getCurrentUrl()
-    {
-        return $this->_urlInterface->getCurrentUrl();
-	}
-	public function getAdminAnswer($id)
+
+    public function getAllProduct()
 	{
-		$answer = $this->_questionCollectionFactory->create();
-		$answer->getSelect()
-			->where("main_table.status = 1 AND main_table.user_id = 0 AND main_table.question_id = ".$id);
-		return $answer;
+		// $product_id=$this->getCurrentProduct()->getId();
+		$product_id = $this->_questionCollectionFactory->create();
+		$product_id->getSelect()
+                ->joinLeft('catalog_product_entity_varchar as pro','main_table.product_id = pro.entity_id AND pro.attribute_id = 73 ',array('*'))
+                ->columns('product_id')
+                ->group('product_id')
+                ->where("main_table.status = 1 AND main_table.type = 0");
+		return $product_id;
+        // return $product_id->getSelect()->__toString();
 	}
+	public function getProductImage($id)
+    {
+        $product = $this->_productRepositoryFactory->create()->load($id);
+        $url = $this->_imageHelper->init($product, 'category_page_list')->getUrl();
+        return $url;
+        
+        // $product->getData('thumbnail');
+        // $product->getData('small_image');
+    }
+    public function getProductUrl($id)
+    {
+        $product = $this->_productrepository->getById($id);
+ 
+        return $product->getUrlKey();
+    }
 	public function getOthersAnswer($id)
 	{
 		$answer = $this->_questionCollectionFactory->create();
@@ -105,15 +119,7 @@ class Question extends \Magento\Framework\View\Element\Template
 			array('*'))
 			->where("main_table.status = 1 AND main_table.user_id != 0  AND main_table.question_id = ".$id);
 		return $answer;
+        // return $answer->getSelect()->__toString();
 	}
-	// public function getProductId()
-	// {
-	// 	// $this->_coreSession->start();
-    //     // return $this->_coreSession->getMyVariable();
-	// 	return $this->_registry->registry('product_id');
-	// }
-	public function getUserId()
-	{
-		return $this->_customerSession->getCustomerData()->getId();
-	}
+	
 }

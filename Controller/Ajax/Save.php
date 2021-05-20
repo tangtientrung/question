@@ -3,7 +3,7 @@ namespace AHT\Question\Controller\Ajax;
 
 use Magento\Framework\Controller\ResultFactory;
 
-class SaveEdit extends \Magento\Framework\App\Action\Action
+class Save extends \Magento\Framework\App\Action\Action
 {
     protected $json;
     protected $resultJsonFactory;
@@ -31,9 +31,27 @@ class SaveEdit extends \Magento\Framework\App\Action\Action
         $question = $this->_questionFactory->create();
 
         $id=$this->getRequest()->getParam('id');
-        $question->load($id);
-        $question->setContent($this->getRequest()->getParam('content'));
-        $question->save();
+        if($id)
+        {
+            $question->load($id);
+            $question->setContent($this->getRequest()->getParam('content'));
+            $question->save();
+        }
+        else {
+            //get parent type
+            $question_parent = $this->_questionFactory->create();
+            $question_parent->load($this->getRequest()->getParam('question_id'));
+            $type=$question_parent->getType()+1;
+
+            //new answer
+            $question->setQuestionId($this->getRequest()->getParam('question_id'));
+            $question->setProductId($this->getRequest()->getParam('product_id'));
+            $question->setUserId($this->_customerSession->getCustomerData()->getId());
+            $question->setContent($this->getRequest()->getParam('content'));
+            $question->setType($type);
+            $question->setStatus(1);
+            $question->save();
+        }
     } 
 }
  

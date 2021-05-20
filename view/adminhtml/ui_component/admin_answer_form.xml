@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
-    <argument name="data" xsi:type="array">
+     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
             <item name="provider" xsi:type="string">admin_answer_form.admin_answer_form_data_source</item>
             <item name="deps" xsi:type="string">admin_answer_form.admin_answer_form_data_source</item>
@@ -25,6 +25,7 @@
                 <item name="url" xsi:type="string">answer/answer/save</item>
             </item>
         </item>
+        
     </argument>
     <dataSource name="admin_answer_form_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
